@@ -5,5 +5,18 @@
         <a routerLink="/detail/{{hero.id}}">
             <span class="badge">{{hero.id}}</span> {{hero.name}}
         </a>
+        <button class="delete" title="delete hero"
+          (click)="delete(hero)">x</button>
     </li>
 </ul>
+
+<div>
+    <label>Hero name:
+        <input #heroName />
+    </label>
+    <!-- O botão (click) passa os dados de entrada para add() e 
+        então limpa e entrada -->
+    <button (click)="add(heroName.value); heroName.value=' '">
+        add
+    </button>    
+</div>
