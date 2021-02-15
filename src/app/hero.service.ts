@@ -47,20 +47,6 @@ export class HeroService {
       );
   }
 
-  /**
-   * Tratar o erro da requisição Http que falhou.
-   * @param operation - nome da operação que falhou.
-   * @param result - valor a ser retornado como resultado do observable.
-   */
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error); //exibe erro no console
-      this.log(`${operation} failed: ${error.message}`);
-      return of(result as T); //Deixa o app continuar rodando, retornando um resultado vazio
-    }
-  }
-
   getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
     return this.http.get<Hero>(url).pipe(
@@ -102,13 +88,26 @@ export class HeroService {
       // se não achar o nome termo pesquisado, retorna um array de heróis vazio
       return of([]);
     }
-    return this.http.get<Hero[]>(`${this.heroesUrl}/?
-    name=${term}`).pipe(
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
       tap(x => x.length ?
         this.log(`found heroes matching "${term}"`) :
         this.log(`no heroes matching "${term}"`)),
       catchError(this.handleError<Hero[]>('searchHeroes', []))
     );
+  }
+
+   /**
+   * Tratar o erro da requisição Http que falhou.
+   * @param operation - nome da operação que falhou.
+   * @param result - valor a ser retornado como resultado do observable.
+   */
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error); //exibe erro no console
+      this.log(`${operation} failed: ${error.message}`);
+      return of(result as T); //Deixa o app continuar rodando, retornando um resultado vazio
+    }
   }
 }
 
